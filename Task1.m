@@ -12,7 +12,10 @@ nu = 1*10^-3;
 mu = 2*10^-6;
 g = 9.81;
 
-f = [0; 0; 0; 0];
+
+force_values = g*m/4;
+
+f = [force_values; force_values; force_values; force_values];
 Body_motor = [-1 -1 -1 -1
                    -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
                    d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
@@ -22,11 +25,13 @@ Statevector_0 = [0; 0; 10; 0; 0; 0; 0; 0; 0; 0; 0; 0];
 tspan = [1 10];
 col(1) = 'b'; 
 
-[Time, Statevector] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f),tspan,Statevector_0);
-Statevector = transpose(Statevector);
-Body_motor_time = Body_motor.*ones(1,length(Time));
+
+    [Time, Statevector] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f),tspan,Statevector_0);
+    Statevector = transpose(Statevector);
+    Body_motor_time = Body_motor.*ones(1,length(Time));
 
 
 
 PlotAircraftSim(Time,Statevector,Body_motor_time,1:10,col)
+
 

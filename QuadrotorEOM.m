@@ -15,6 +15,14 @@ function var_dot = QuadrotorEOM(t, var, g, m, I, d, km, nu, mu, motor_forces)
     Ix = I(1,1);
     Iy = I(2,2);
     Iz = I(3,3);
+
+    X = -nu*norm([u v w])*u;
+    Y = -nu*norm([u v w])*v;
+    Z = -nu*norm([u v w])*w;
+
+    L = -mu*norm([p q r])*p;
+    M = -mu*norm([p q r])*q;
+    N = -mu*norm([p q r])*r;
     
     Body_motor = [-1 -1 -1 -1
                    -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
@@ -36,12 +44,12 @@ function var_dot = QuadrotorEOM(t, var, g, m, I, d, km, nu, mu, motor_forces)
     var_dot(4:6,1) = [1 sin(phi)*tan(theta) cos(phi)*tan(theta)
                        0 cos(phi) -sin(phi)
                        0 sin(phi)*sec(theta) cos(phi)*sec(theta)]*var(10:12);
-    var_dot(7:9,1) = [r*v-q*w-g*sin(theta)
-                      p*w-r*u+g*cos(theta)*sin(phi)
-                      q*u-p*v+g*cos(theta)*cos(phi)+1/m*(Zc)];
-    var_dot(10:12,1) = [(Iy-Iz)/Ix*q*r+1/Ix*(Lc)
-                        (Iz-Ix)/Iy*p*r+1/Iy*(Mc)
-                        (Ix-Iy)/Iz*p*q+1/Iz*(Nc)];
+    var_dot(7:9,1) = [r*v-q*w-g*sin(theta)+1/m*X
+                      p*w-r*u+g*cos(theta)*sin(phi)+1/m*Y
+                      q*u-p*v+g*cos(theta)*cos(phi)+1/m*(Z+Zc)];
+    var_dot(10:12,1) = [(Iy-Iz)/Ix*q*r+1/Ix*(L+Lc)
+                        (Iz-Ix)/Iy*p*r+1/Iy*(M+Mc)
+                        (Ix-Iy)/Iz*p*q+1/Iz*(N+Nc)];
 
 
 end
