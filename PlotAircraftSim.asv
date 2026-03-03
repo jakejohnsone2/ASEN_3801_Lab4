@@ -65,7 +65,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         ylabel('Yaw Rate (rad/s)')
         sgtitle('Angular Velocity')
 
-        figure(fig(4))
+        figure(fig(5))
         hold on
         subplot(4,1,1)
         plot(time,control_input_array(1,:),col(i))
@@ -88,9 +88,25 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
 
         figure(fig(5))
         hold on
-        plot3(a)
-
-
+        x = aircraft_state_array(1,:);
+        y = aircraft_state_array(2,:);
+        z = -aircraft_state_array(3,:);   % positive height upward
+        t = linspace(0,1,length(col));
+        surface([x; x], ...
+        [y; y], ...
+        [z; z], ...
+        [t; t], ...
+        'FaceColor','none', ...
+        'EdgeColor','interp', ...
+        'LineWidth',2);
+        colormap([linspace(1,0,256)' ...
+        linspace(0,1,256)' ...
+        zeros(256,1)])
+        xlabel('Inertial x Position (m)')
+        ylabel('Inertial y Position (m)')
+        zlabel('Inertial Z Position (m)')
+        grid on
+        view(3)
 
     end
 
