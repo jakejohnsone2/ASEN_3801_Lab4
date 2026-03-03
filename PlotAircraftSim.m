@@ -92,8 +92,9 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         y = aircraft_state_array(2,:);
         z = -aircraft_state_array(3,:);   % positive height upward
         plot3(x, y , z)
-        plot3(x(0), y(0), z(0), 'o' ,'g')
-        plot3(x(end), y(end), z(end), 'o' , 'r')
+        plot3(x(1), y(1), z(1), 'go', 'MarkerFaceColor', 'g', 'MarkerSize', 8)  
+        plot3(x(end), y(end), z(end), 'ro', 'MarkerFaceColor', 'r', 'MarkerSize', 8)
+
         xlabel('Inertial x Position (m)')
         ylabel('Inertial y Position (m)')
         zlabel('Inertial Z Position (m)')
