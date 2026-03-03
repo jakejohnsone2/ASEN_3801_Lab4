@@ -20,13 +20,7 @@ Body_motor = [-1 -1 -1 -1
 
 Statevector_0 = [0; 0; 10; 0; 0; 0; 0; 0; 0; 0; 0; 0];
 tspan = [1 10];
-col(1) = 'b'; 
 
 [Time, Statevector] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f),tspan,Statevector_0);
-Statevector = transpose(Statevector);
-Body_motor_time = Body_motor.*ones(1,length(Time));
-
-
-
-PlotAircraftSim(Time,Statevector,Body_motor_time,1:10,col)
+PlotAircraftSim(Time,Statevector,Body_motor,)
 

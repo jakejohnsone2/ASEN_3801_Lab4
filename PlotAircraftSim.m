@@ -65,7 +65,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         ylabel('Yaw Rate (rad/s)')
         sgtitle('Angular Velocity')
 
-        figure(fig(4))
+        figure(fig(5))
         hold on
         subplot(4,1,1)
         plot(time,control_input_array(1,:),col(i))
@@ -86,7 +86,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         sgtitle('Control Inputs')
 
 
-        figure(fig(5))
+        figure(fig(6))
         hold on
         x = aircraft_state_array(1,:);
         y = aircraft_state_array(2,:);
