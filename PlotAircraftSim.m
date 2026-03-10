@@ -9,7 +9,6 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         ylabel('X Position (m)')
         subplot(3,1,2)
         plot(time,aircraft_state_array(2,:),col(i))
-        axis([0 10 -1 1])
         xlabel('Time (s)')
         ylabel('Y Position (m)')
         subplot(3,1,3)
