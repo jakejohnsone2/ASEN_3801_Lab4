@@ -37,52 +37,26 @@ function var_dot = QuadrotorEOM_Linearized(t, var, g, m, I, deltaFc, deltaGc)
     Iy = I(2,2);
     Iz = I(3,3);
     
-    % Calculating the force due to aerodynamic effects
-    X = -nu*norm([u v w])*u;
-    Y = -nu*norm([u v w])*v;
-    Z = -nu*norm([u v w])*w;
     
-    % Calculating the moment due to aerodynamic effects
-    L = -mu*norm([p q r])*p;
-    M = -mu*norm([p q r])*q;
-    N = -mu*norm([p q r])*r;
-    
-    % Calculating the controls vector
-    Body_motor = [-1 -1 -1 -1
-                   -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
-                   d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
-                   km -km km -km]*motor_forces;
-
     % Extracting the control forces and moments
-    Zc = Body_motor(1);
-    Lc = Body_motor(2);
-    Mc = Body_motor(3);
-    Nc = Body_motor(4);
-
-
-    % Calculating the dcm
-    DCM = [cos(theta)*cos(psi) sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi)
-           cos(theta)*sin(psi) sin(phi)*sin(theta)*sin(psi)-cos(phi)*cos(psi) cos(phi)*sin(theta)*sin(psi)+sin(phi)*cos(psi)
-           -sin(theta) sin(phi)*cos(theta) cos(phi)*cos(theta)];
+    Zc = deltaFc;
+    Lc = deltaGc(1);
+    Mc = deltaGc(2);
+    Nc = deltaGc(3);
     
-    %% Calculating the change in the variables
-    % Calculating the change in inertial position of our quadrotor
-    var_dot(1:3,1) = DCM*var(7:9);
-    
-    % Calculating the change in euler angles of our quadrotor
-    var_dot(4:6,1) = [1 sin(phi)*tan(theta) cos(phi)*tan(theta)
-                       0 cos(phi) -sin(phi)
-                       0 sin(phi)*sec(theta) cos(phi)*sec(theta)]*var(10:12);
+    %% Calculating the Linearized equations
 
-    % Calculating the change in velocity of our quadrotor
-    var_dot(7:9,1) = [r*v-q*w-g*sin(theta)+1/m*X
-                      p*w-r*u+g*cos(theta)*sin(phi)+1/m*Y
-                      q*u-p*v+g*cos(theta)*cos(phi)+1/m*(Z+Zc)];
-
-    % Calculating the change in rotational velocity of our quadrotot
-    var_dot(10:12,1) = [(Iy-Iz)/Ix*q*r+1/Ix*(L+Lc)
-                        (Iz-Ix)/Iy*p*r+1/Iy*(M+Mc)
-                        (Ix-Iy)/Iz*p*q+1/Iz*(N+Nc)];
-
+    var_dot(1,1) = u;
+    var_dot(2,1) = v;
+    var_dot(3,1) = w;
+    var_dot(4,1) = p;
+    var_dot(5,1) = q;
+    var_dot(6,1) = r;
+    var_dot(7,1) = -g*theta;
+    var_dot(8,1) = g*phi;
+    var_dot(9,1) = 1/m*Zc;
+    var_dot(10,1) = 1/Ix*Lc;
+    var_dot(11,1) = 1/Ix*Mc;
+    var_dot(12,1) = 1/Ix*Nc;
 
 end
