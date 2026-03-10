@@ -17,7 +17,8 @@ Body_motor = [-1 -1 -1 -1
                    d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
                    km -km km -km]*f;
 
-Statevector_0 = [0; 0; 10; 0; 5*pi/180; 0; 0; 0; 0; 0; 0; 0];  % starting at z=10
+
+Statevector_0 = [0; 0; 10; 0; 0; 0; 0; 0; 0; .1; 0; 0];  % starting at z=10
 tspan = [1 10];
 col(1) = 'b'; 
 
@@ -30,3 +31,9 @@ Body_motor_time = Body_motor.*ones(1,length(Time));
 PlotAircraftSim(Time,Statevector,Body_motor_time,1:10,col)
 
 
+function [Fc, Gc] = RotationDerivativeFeedback(var, m, g)
+
+Fc = 
+Gc(1) = 
+
+end 
