@@ -69,3 +69,31 @@ Statevector_four = transpose(Statevector_four);
 PlotAircraftSim(Time_four,Statevector_four,Body_motor_time_four,7:12,col)
 
 %% Part 4 b)
+% Initializing conditions
+x_dot_e = 5;
+
+% Calculating the angle required
+psi_a = atan(-nu*x_dot_e^2/(m*g));
+
+% Calcualting the initial velocities
+v = -cos(psi_a)*x_dot_e;
+w = sin(psi_a)*x_dot_e;
+
+% Calculating the require force
+force_values_four_b = sqrt((m*g)^2+(-nu*x_dot_e^2)^2)/4;
+
+% Creating the force values
+f_four_b = [force_values_four_b; force_values_four_b; force_values_four_b; force_values_four_b];
+Body_motor_four_b = [-1 -1 -1 -1
+                   -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
+                   d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
+                   km -km km -km]*f_four_b;
+
+% Initializng the state vecotr
+Statevector_0_four_a = [0; 0; 10; psi_a; 0; pi/2; 0; v; w; 0; 0; 0];
+
+% Simulating and ploting
+[Time_four_b, Statevector_four_b] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f_four_b),tspan,Statevector_0_four_a);
+Body_motor_time_four = Body_motor_four_b.*ones(1,length(Time_four_b));
+Statevector_four_b = transpose(Statevector_four_b);
+PlotAircraftSim(Time_four_b,Statevector_four_b,Body_motor_time_four,13:18,col)
