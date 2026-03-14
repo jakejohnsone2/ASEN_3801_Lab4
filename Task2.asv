@@ -72,8 +72,8 @@ Perturbation.five.f = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1];
 % Initializing graphing variables
 names.five = ["a" "b" "c" "d" "e" "f"];
 print_names.five = ["2_5_a" "2_5_b" "2_5_c" "2_5_d" "2_5_e" "2_5_f"];
-legend_names.five = ["Uncontrolled" "Controlled"];
-
+legend_names.five = ["Controlled" "Unctrolled";
+col = [b','r'];
 
 for i = 1:length(names.five)
     % Calculating the response to the perturbations
@@ -88,12 +88,8 @@ for i = 1:length(names.five)
         Motor_forces_time.five.(names.five(i))(:,ii) = ComputeMotorForces(Fc,Gc,d,km);
     end
     
-    % Combining the perturbation
-    Time.onefive.(names.one(i)) = [Time.one.(names.one(i)) Time.five.(names.one(i))];
-    Statevector.onefive.(names.one(i)) = [Statevector.one.(names.one(i)); Statevector.five.(names.one(i))];
-    Body_motor_time.onefive.(names.one(i)) = [Body_motor_time.one.(names.one(i)); Body_motor_time.five.(names.one(i))];
-
+    
     % Plotting the perturbation
-    PlotAircraftSim(Time.onefive.(names.five(i)),Statevector.onefive.(names.five(i)),Body_motor_time.onefive.(names.five(i)),(1:6)+(i-1)*6+36,col,print_names.five(i),legend_names.five)
+    PlotAircraftSim(Time.five.(names.five(i)),Statevector.five.(names.five(i)),Body_motor_time.five.(names.five(i)),(1:6)+(i-1)*6+36,col,print_names.five(i),legend_names.five)
 end
 
