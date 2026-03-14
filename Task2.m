@@ -25,9 +25,9 @@ tspan = 0:.01:10;
 col = ['b', 'r']; 
 
 % Initializing the perturbations
-Perturbation.one.a = [0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0];
-Perturbation.one.b = [0; 0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0];
-Perturbation.one.c = [0; 0; 0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0];
+Perturbation.one.a = [0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.one.b = [0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.one.c = [0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0];
 Perturbation.one.d = [0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0; 0];
 Perturbation.one.e = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0];
 Perturbation.one.f = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1];
@@ -62,9 +62,9 @@ end
 %% Part 5
 
 % Initializing perturbation conditions
-Perturbation.five.a = [0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0];
-Perturbation.five.b = [0; 0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0];
-Perturbation.five.c = [0; 0; 0; 0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0];
+Perturbation.five.a = [0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.five.b = [0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.five.c = [0; 0; 0; 0; 0; 5*pi/180; 0; 0; 0; 0; 0; 0];
 Perturbation.five.d = [0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0; 0];
 Perturbation.five.e = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0];
 Perturbation.five.f = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1];
@@ -87,13 +87,70 @@ for i = 1:length(names.five)
         Gc = Body_motor_time.five.(names.five(i))(2:4,ii);
         Motor_forces_time.five.(names.five(i))(:,ii) = ComputeMotorForces(Fc,Gc,d,km);
     end
+    % Calculating the motor forces
+    for ii = 1:size(Body_motor_time.one.(names.one(i)),2)
+        Fc = Body_motor_time.one.(names.one(i))(1,ii);
+        Gc = Body_motor_time.one.(names.one(i))(2:4,ii);
+        Motor_forces_time.one.(names.one(i))(:,ii) = ComputeMotorForces(Fc,Gc,d,km);
+    end
     
     % Combining the perturbation
     Time.onefive.(names.one(i)) = [Time.one.(names.one(i)) Time.five.(names.one(i))];
     Statevector.onefive.(names.one(i)) = [Statevector.one.(names.one(i)); Statevector.five.(names.one(i))];
     Body_motor_time.onefive.(names.one(i)) = [Body_motor_time.one.(names.one(i)); Body_motor_time.five.(names.one(i))];
-
+    
     % Plotting the perturbation
     PlotAircraftSim(Time.onefive.(names.five(i)),Statevector.onefive.(names.five(i)),Body_motor_time.onefive.(names.five(i)),(1:6)+(i-1)*6+36,col,print_names.five(i),legend_names.five)
 end
 
+% Plotting the individual motor forces
+for i = 1:length(names.five)
+    figure()
+
+    % Plotting the motor force for the first motor
+    subplot(4,1,1)
+    hold on
+    plot(Time.one.(names.one(i)),Motor_forces_time.one.(names.one(i))(1,:),col(1))
+    plot(Time.five.(names.five(i)),Motor_forces_time.five.(names.five(i))(1,:),col(2))
+    xlabel('Time (s)')
+    ylabel('Force (N)')
+    title('Motor 1')
+    legend(legend_names.five,'Location','northeastoutside')
+    hold off
+    
+    % Plotting the motor force for the second motor
+    subplot(4,1,2)
+    hold on
+    plot(Time.one.(names.one(i)),Motor_forces_time.one.(names.one(i))(2,:),col(1))
+    plot(Time.five.(names.five(i)),Motor_forces_time.five.(names.five(i))(2,:),col(2))
+    xlabel('Time (s)')
+    ylabel('Force (N)')
+    title('Motor 2')
+    legend(legend_names.five,'Location','northeastoutside')
+    hold off
+    
+    % Plotting the motor force for the third motor
+    subplot(4,1,3)
+    hold on
+    plot(Time.one.(names.one(i)),Motor_forces_time.one.(names.one(i))(3,:),col(1))
+    plot(Time.five.(names.five(i)),Motor_forces_time.five.(names.five(i))(3,:),col(2))
+    xlabel('Time (s)')
+    ylabel('Force (N)')
+    title('Motor 3')
+    legend(legend_names.five,'Location','northeastoutside')
+    hold off
+    
+    % Plotting the motor force for the fourth motor
+    subplot(4,1,4)
+    hold on
+    plot(Time.one.(names.one(i)),Motor_forces_time.one.(names.one(i))(4,:),col(1))
+    plot(Time.five.(names.five(i)),Motor_forces_time.five.(names.five(i))(4,:),col(2))
+    xlabel('Time (s)')
+    ylabel('Force (N)')
+    title('Motor 4')
+    legend(legend_names.five,'Location','northeastoutside')
+    hold off
+    
+    sgtitle('Motor Forces vs Time')
+    print('Motor_Forces_2_5_' + print_names.five(i),'-dpng')
+end

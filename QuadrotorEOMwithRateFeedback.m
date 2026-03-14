@@ -5,11 +5,8 @@ function var_dot = QuadrotorEOMwithRateFeedback(t, var, g, m, I, nu, mu)
             g:             gravity
             m:             mass
             I:             Inertia Matrix
-            d:             motor distance from center
-            km:            Control moment coefficient
             nu             Aerodynamic force coefficient
             mu:            Aerodynamic moment coefficient
-            motor_forces:  4x1 force vector
     Outputs: var_dot:      change in variables contained in the statevector
     Methodology:           Use Equations of motions to simulate the 
                            reactions of a quadrotor.
@@ -47,6 +44,7 @@ function var_dot = QuadrotorEOMwithRateFeedback(t, var, g, m, I, nu, mu)
     M = -mu*norm([p q r])*q;
     N = -mu*norm([p q r])*r;
     
+    % Calculating the forces using our function
     [Zc, Gc] = RotationDerivativeFeedback(var,m,g);
     Lc = Gc(1);
     Mc = Gc(2);

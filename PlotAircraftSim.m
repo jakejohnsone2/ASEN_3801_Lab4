@@ -1,6 +1,22 @@
 function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, col, print_name, legend_name)
-    %% Intertial Velocity
+    %{
+    Inputs: time:                   time vector (s)
+            aircraft_state_array:   12xn Vector containg the state variables
+            control_input_array:    4xn Vector containg the control variables
+            fig:                    array for the figure number
+            col:                    Vector containing the colors for each line
+            print_name:             Vector containing the names for each plot
+            legend_name:            Vector containing the names for each line
+    Outputs:                        Figures
+    Methodology:                    Ploting the variables vs time
+    %}
+
+
+
+    %% Intertial Position
     figure(fig(1))
+
+    % Plotting the inertial x position
     subplot(3,1,1)
     hold on
     for i = 1:length(col)
@@ -11,7 +27,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     legend(legend_name,'Location','northeastoutside')
     hold off
     
-    
+    % Plotting the inertial y position
     subplot(3,1,2)
     hold on
     for i = 1:length(col)
@@ -22,6 +38,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     legend(legend_name,'Location','northeastoutside')
     hold off
     
+    % Plotting the inertial z position
     subplot(3,1,3)
     hold on
     for i = 1:length(col)
@@ -38,6 +55,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
 
     %% Euler Angles
     figure(fig(2))
+
+    % Plotting the roll euler angle
     subplot(3,1,1)
     hold on
     for i = 1:length(col)
@@ -47,7 +66,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the pitch euler angle
     subplot(3,1,2)
     hold on
     for i = 1:length(col)
@@ -57,7 +77,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the yaw euler angle
     subplot(3,1,3)
     hold on
     for i = 1:length(col)
@@ -72,6 +93,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     
     %% Body Velocity
     figure(fig(3))
+
+    % Plotting the x body velocity
     subplot(3,1,1)
     hold on
     for i = 1:length(col)
@@ -81,7 +104,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the y body velocity
     subplot(3,1,2)
     hold on
     for i = 1:length(col)
@@ -91,7 +115,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the z body velocity
     subplot(3,1,3)
     hold on
     for i = 1:length(col)
@@ -106,6 +131,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     
     %% Rotation Rate
     figure(fig(4))
+
+    % Plotting the rotational rate about the x axis
     subplot(3,1,1)
     hold on
     for i = 1:length(col)
@@ -115,7 +142,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the rotational rate about the y axis
     subplot(3,1,2)
     hold on
     for i = 1:length(col)
@@ -125,7 +153,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the rotational rate about the z axis
     subplot(3,1,3)
     hold on
     for i = 1:length(col)
@@ -140,6 +169,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     
     %% Motor Controls
     figure(fig(5))
+
+    % Plotting the body z force
     subplot(4,1,1)
     hold on
     for i = 1:length(col)
@@ -150,6 +181,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     legend(legend_name,'Location','northeastoutside')
     hold off
     
+    % Plotting the body x moment
     subplot(4,1,2)
     hold on
     for i = 1:length(col)
@@ -160,7 +192,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the body y moment
     subplot(4,1,3)
     hold on
     for i = 1:length(col)
@@ -170,7 +203,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     legend(legend_name,'Location','northeastoutside')
     hold off
-
+    
+    % Plotting the body z moment
     subplot(4,1,4)
     hold on
     for i = 1:length(col)
@@ -192,7 +226,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         x(:,1) = aircraft_state_array(1+12*(i-1),:);
         y(:,1) = aircraft_state_array(2+12*(i-1),:);
         z(:,1) = -aircraft_state_array(3+12*(i-1),:);   % positive height upward
-        plot3(x, y , z)
+        plot3(x, y , z,'LineWidth',2,'Color',col(i))
         plot3(x(1,1), y(1,1), z(1,1), 'go', 'MarkerFaceColor', 'g', 'MarkerSize', 8,'HandleVisibility','off')  
         plot3(x(end,1), y(end,1), z(end,1), 'ro', 'MarkerFaceColor', 'r', 'MarkerSize', 8, 'HandleVisibility','off')
         

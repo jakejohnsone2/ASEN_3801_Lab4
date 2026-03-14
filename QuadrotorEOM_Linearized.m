@@ -5,11 +5,8 @@ function var_dot = QuadrotorEOM_Linearized(t, var, g, m, I, deltaFc, deltaGc)
             g:             gravity
             m:             mass
             I:             Inertia Matrix
-            d:             motor distance from center
-            km:            Control moment coefficient
-            nu             Aerodynamic force coefficient
-            mu:            Aerodynamic moment coefficient
-            motor_forces:  4x1 force vector
+            deltaGc:       Vector containing the motor moments
+            deltaFc:       Motor force
     Outputs: var_dot:      change in variables contained in the statevector
     Methodology:           Use Equations of motions to simulate the 
                            reactions of a quadrotor.
