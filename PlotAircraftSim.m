@@ -232,6 +232,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         
         xlabel('Inertial x Position (m)')
         ylabel('Inertial y Position (m)')
+        title('3D Position of Quadrotor')
         zlabel('Inertial Z Position (m)')
         grid on
         view(3)
@@ -240,7 +241,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
     end
     hold off
 
-    legend(legend_name,'Location','best')
+    legend(legend_name,'Location','northoutside')
     
 
 
