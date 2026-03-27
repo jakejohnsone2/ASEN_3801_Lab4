@@ -244,9 +244,10 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
         print(fig(6),directory_name + "3d_Position_" + print_name,'-dpng')
 
     end
+    legend(legend_name,'Location','eastoutside')
     hold off
 
-    legend(legend_name,'Location','northoutside')
+    
     
 
 
