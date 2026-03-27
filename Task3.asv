@@ -1,0 +1,118 @@
+close all
+clear
+clc
+
+
+% Initializing conditions
+m = .068;
+d = .06;
+km = .0024;
+I = [5.8*10^-5 0 0
+    0 7.2*10^-5 0
+    0 0 1*10^-4];
+nu = 1*10^-3;
+mu = 2*10^-6;
+g = 9.81;
+
+% Initializing forces
+f = [g*m/4; g*m/4; g*m/4; g*m/4];
+Body_motor = [-1 -1 -1 -1
+                   -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
+                   d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
+                   km -km km -km]*f;
+% Initializing graph settings
+tspan = 0:.01:10;
+col = ['b', 'r']; 
+
+% Initializing the perturbations
+Perturbation.one.a = [0; 0; 0; .5*pi/180; 0; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.one.b = [0; 0; 0; 0; .5*pi/180; 0; 0; 0; 0; 0; 0; 0];
+Perturbation.one.c = [0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0; 0];
+Perturbation.one.d = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; .1; 0];
+
+% Setting names
+names.one = ["a" "b" "c" "d"];
+print_names.one = ["3_34_a" "3_34_b" "3_34_c" "3_34_d"];
+legend_names.one = ["Linearized Dynamics Model" "Non-Linearized Dynamics Model"];
+
+
+for i = 1:length(names.one)
+    % Calculating the perturbations for part one
+    [Time.one.(names.one(i)), Statevector.one.(names.one(i))] = ode45(@(t,statevector) QuadrotorEOM_Linearized_InnerLoop(t,statevector,g,m,I),tspan,Perturbation.one.(names.one(i)));
+    Statevector.one.(names.one(i)) = transpose(Statevector.one.(names.one(i)));
+    Body_motor_time.one.(names.one(i)) = Body_motor.*ones(1,length(Time.one.(names.one(i))));
+
+    % Calculating the perturbations from part two
+    [Time.two.(names.one(i)), Statevector.two.(names.one(i))] = ode45(@(t,statevector) QuatrotorEOMwithInnerLoop(t,statevector,g,m,I,d,km,nu,mu),tspan,Perturbation.one.(names.one(i)));
+    Statevector.two.(names.one(i)) = transpose(Statevector.two.(names.one(i)));
+    Body_motor_time.two.(names.one(i)) = Body_motor.*ones(1,length(Time.two.(names.one(i))));
+    
+    % Combining the perturbation
+    Time.onetwo.(names.one(i)) = [Time.one.(names.one(i)) Time.two.(names.one(i))];
+    Statevector.onetwo.(names.one(i)) = [Statevector.one.(names.one(i)); Statevector.two.(names.one(i))];
+    Body_motor_time.onetwo.(names.one(i)) = [Body_motor_time.one.(names.one(i)); Body_motor_time.two.(names.one(i))];
+    
+    % Plotting the perturbation
+    PlotAircraftSim(Time.onetwo.(names.one(i)),Statevector.onetwo.(names.one(i)),Body_motor_time.onetwo.(names.one(i)),(1:6) +(i-1)*6,col,print_names.one(i),legend_names.one,'Plots3/Plots3/')
+end
+
+
+%% Part 3.5
+% Lateral
+% Initializing conditions
+mintimeconst_lat = 1.25;
+k2_lat = 40*I(1,1);
+k1_lat = 22*I(1,1);
+
+% Calculating k3 such that is meets the conditions
+[eigenvals_lat, k3_lat] = CalcK3(k1_lat,k2_lat,mintimeconst_lat,I,g,1);
+
+% Plotting
+figure(25)
+plot(real(eigenvals_lat),imag(eigenvals_lat),'MarkerSize',20,'MarkerEdgeColor','r','LineStyle','none','Marker','.')
+xlabel('Real Value')
+ylabel('Imaginary Value')
+title('Locus Plots for the Eigenvalues Associated with the Lateral System for a Time Constant Less then 1.25s')
+grid on
+axis([-25 10 -1 1])
+
+% Calculating time constant
+timeConstant_lat = 1/min(abs(eigenvals_lat));
+
+% Longitudinal
+% Initializing conditions
+mintimeconst_long = 1.25;
+k2_long = 40*I(2,2);
+k1_long = 22*I(2,2);
+
+% Calculating k3 such that is meets the conditions
+[eigenvals_long, k3_long] = CalcK3(k1_long,k2_long,mintimeconst_long,I,g,1);
+
+% Plotting
+figure(26)
+plot(real(eigenvals_long),imag(eigenvals_long),'MarkerSize',20,'MarkerEdgeColor','r','LineStyle','none','Marker','.')
+xlabel('Real Value')
+ylabel('Imaginary Value')
+title('Locus Plots for the Eigenvalues Associated with the Longitudinal System for a Time Constant Less then 1.25s')
+grid on
+axis([-30 10 -1 1])
+
+% Calculating time constant
+timeConstant_long = 1/min(abs(eigenvals_long));
+
+%% Part 3.6
+
+print_names.six = "3_7_lat";
+Initial_six = [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0];
+
+
+% Calculating the perturbations for part six
+[Time.six.lat, Statevector.six.lat] = ode45(@(t,statevector) QuadrotorEOMwithRateFeedback(t,statevector,g,m,I,nu,mu,1),tspan,Initial_six);
+Statevector.six.lat = transpose(Statevector.six.lat);
+for ii = 1:length(Time.six.lat)
+        [Fc, Gc] = VelocityReferenceFeedback(Time.six.lat(ii),Statevector.six.lat(:,ii));
+        Body_motor_time.six.lat(:,ii) = [Fc; Gc];
+end
+
+% Plotting the perturbation
+PlotAircraftSim(Time.six.lat,Statevector.six.lat,Body_motor_time.six.lat,26+(1:6),'b',print_names.six,'off','Plots3/Plots7/')

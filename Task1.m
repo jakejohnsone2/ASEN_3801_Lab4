@@ -35,7 +35,7 @@ Statevector = transpose(Statevector);
 Body_motor_time = Body_motor.*ones(1,length(Time));
 
 % Plotting the figure for the quadrotor
-PlotAircraftSim(Time,Statevector,Body_motor_time,1:6,col)
+PlotAircraftSim(Time,Statevector,Body_motor_time,1:6,col,'1_1','off','Plots1/Plots1/')
 
 %% Part 4 a)
 
@@ -66,7 +66,7 @@ Statevector_0_four_a = [0; 0; 10; 0; theta_a; 0; u; 0; w; 0; 0; 0];
 [Time_four, Statevector_four] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f_four),tspan,Statevector_0_four_a);
 Body_motor_time_four = Body_motor_four.*ones(1,length(Time_four));
 Statevector_four = transpose(Statevector_four);
-PlotAircraftSim(Time_four,Statevector_four,Body_motor_time_four,7:12,col)
+PlotAircraftSim(Time_four,Statevector_four,Body_motor_time_four,7:12,col,'1_4_a','off','Plots1/Plots4a/')
 
 %% Part 4 b)
 % Initializing conditions
@@ -96,4 +96,4 @@ Statevector_0_four_a = [0; 0; 10; psi_a; 0; pi/2; 0; v; w; 0; 0; 0];
 [Time_four_b, Statevector_four_b] = ode45(@(t,statevector) QuadrotorEOM(t, statevector,g,m,I,d,km,nu,mu,f_four_b),tspan,Statevector_0_four_a);
 Body_motor_time_four = Body_motor_four_b.*ones(1,length(Time_four_b));
 Statevector_four_b = transpose(Statevector_four_b);
-PlotAircraftSim(Time_four_b,Statevector_four_b,Body_motor_time_four,13:18,col)
+PlotAircraftSim(Time_four_b,Statevector_four_b,Body_motor_time_four,13:18,col,'1_4_b','off','Plots1/Plots4b/')

@@ -1,15 +1,12 @@
-function var_dot = QuadrotorEOM(t, var, g, m, I, d, km, nu, mu, motor_forces)
-    %{
+function var_dot = QuadrotorEOMwithInnerLoop(t, var, g, m, I, d, km, nu, mu)
+%{
     Inputs: t:             time
             var:           12x1 statevector
             g:             gravity
             m:             mass
             I:             Inertia Matrix
-            d:             motor distance from center
-            km:            Control moment coefficient
             nu             Aerodynamic force coefficient
             mu:            Aerodynamic moment coefficient
-            motor_forces:  4x1 force vector
     Outputs: var_dot:      change in variables contained in the statevector
     Methodology:           Use Equations of motions to simulate the 
                            reactions of a quadrotor.
@@ -47,17 +44,11 @@ function var_dot = QuadrotorEOM(t, var, g, m, I, d, km, nu, mu, motor_forces)
     M = -mu*norm([p q r])*q;
     N = -mu*norm([p q r])*r;
     
-    % Calculating the controls vector
-    Body_motor = [-1 -1 -1 -1
-                   -d/sqrt(2) -d/sqrt(2) d/sqrt(2) d/sqrt(2)
-                   d/sqrt(2) -d/sqrt(2) -d/sqrt(2) d/sqrt(2)
-                   km -km km -km]*motor_forces;
-
-    % Extracting the control forces and moments
-    Zc = Body_motor(1);
-    Lc = Body_motor(2);
-    Mc = Body_motor(3);
-    Nc = Body_motor(4);
+    % Calculating the forces using our function
+    [Zc, Gc] = InnerLoopFeedback(var);
+    Lc = Gc(1);
+    Mc = Gc(2);
+    Nc = Gc(3);
 
 
     % Calculating the dcm

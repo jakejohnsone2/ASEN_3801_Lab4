@@ -1,12 +1,10 @@
-function var_dot = QuadrotorEOM_Linearized(t, var, g, m, I, deltaFc, deltaGc)
+function var_dot = QuadrotorEOM_Linearized_InnerLoop(t, var, g, m, I)
     %{
     Inputs: t:             time
             var:           12x1 statevector
             g:             gravity
             m:             mass
             I:             Inertia Matrix
-            deltaGc:       Vector containing the motor moments
-            deltaFc:       Motor force
     Outputs: var_dot:      change in variables contained in the statevector
     Methodology:           Use Equations of motions to simulate the 
                            reactions of a quadrotor.
@@ -35,11 +33,12 @@ function var_dot = QuadrotorEOM_Linearized(t, var, g, m, I, deltaFc, deltaGc)
     Iz = I(3,3);
     
     
-    % Extracting the control forces and moments
-    Zc = deltaFc;
-    Lc = deltaGc(1);
-    Mc = deltaGc(2);
-    Nc = deltaGc(3);
+    % Calculating the forces and moments
+    [Zc, Gc] = InnerLoopFeedback(var);
+    Zc = Zc - (-m*g);
+    Lc = Gc(1);
+    Mc = Gc(2);
+    Nc = Gc(3);
     
     %% Calculating the Linearized equations
 
